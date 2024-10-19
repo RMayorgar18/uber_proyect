@@ -1,0 +1,11 @@
+.center-avatar {
+    display: flex;
+    justify-content: center;
+  }
+
+.custom-yellow-button {
+    --background: var(--ion-color-custom-yellow);
+    --color: white; /* Cambia el color del texto si es necesario */
+}
+  
+  
