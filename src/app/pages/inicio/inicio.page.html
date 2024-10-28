@@ -2,14 +2,14 @@
  
   <ion-content class="ion-padding">
     <div>
-      <ion-button class="custom-yellow-button">Viajes</ion-button>
+      <ion-button class="custom-yellow-button" [routerLink]="['/viaje']">Viajes</ion-button>
     </div>
     <div>
       <ion-button class="custom-yellow-button" [routerLink]="['/vehiculo']">Vehiculo</ion-button>
     </div>
     <div>
       <ion-ripple-effect></ion-ripple-effect>
-      <ion-button [routerLink]="['/perfil']" class="custom-yellow-button">Perfil</ion-button>
+      <ion-button (click)="irAPerfil()" class="custom-yellow-button">Perfil</ion-button>
     </div>
 
   </ion-content>
@@ -29,5 +29,5 @@
       <ion-title>Feed</ion-title>
     </ion-toolbar>
   </ion-header>
-  <ion-content class="ion-padding"> ACA IRA ALGO </ion-content>
+  <ion-content class="ion-padding"> ACA IRA UN MAPA </ion-content>
 </div>

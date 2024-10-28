@@ -14,7 +14,7 @@ export class PerfilPage implements OnInit {
   correo: string = "";
   contrasena: string = "";
   token: string = "";
-  usuario: UserModel[] = []; 
+  usuario: UserModel[] = []; // Inicializar como un array vacío para evitar problemas de acceso
 
   constructor(
     private router: Router,

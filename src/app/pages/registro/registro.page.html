@@ -1,51 +1,37 @@
-<ion-header>
+<ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
-    </ion-buttons>
-    <ion-title>Registro</ion-title>
+    <ion-title>registro</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Registro</ion-card-title>
-    </ion-card-header>
+<ion-content [fullscreen]="true">
+  <div class="box">
+    <ion-list>
+      <ion-item >
+        <ion-input [(ngModel)]="correo" label="Correo"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input [(ngModel)]="contrasena" label="Contraseña"></ion-input>
+      </ion-item>
+      <ion-item >
+        <ion-input [(ngModel)]="nombre" label="Nombre"></ion-input>
+      </ion-item>
+      <ion-item >
+        <ion-input [(ngModel)]="telefono" label="Telefono"></ion-input>
+      </ion-item>
 
-    <ion-card-content>
-      <form [formGroup]="formularioRegistro" (keyup.enter)="guardar()">
-        <ion-item>
-          <ion-label position="floating">Nombre</ion-label>
-          <ion-input formControlName="nombre" type="text"></ion-input>
-        </ion-item>
 
-        <ion-item>
-          <ion-label position="floating">Mail</ion-label>
-          <ion-input formControlName="mail" type="email"></ion-input>
-        </ion-item>
+        
+          <img *ngIf="imagen" [src]="imagen.src" height="100" width="100" alt="">
+        
 
-        <ion-item>
-          <ion-label position="floating">numero de Telefono </ion-label>
-          <ion-input formControlName="celular" type="number"></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-label position="floating">Contraseña</ion-label>
-          <ion-input formControlName="password" type="password"></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-label position="floating">Confirmar Contraseña</ion-label>
-          <ion-input formControlName="confirmarPassword" type="password"></ion-input>
-        </ion-item>
-      
-        <ion-button id="regist-loading" expand="block" (click)="guardar()" class="custom-yellow-button">
-          Registrarse
+        <ion-button (click)="takePhoto()">
+          <ion-icon style="margin-right: 10px;" name="camera-outline"></ion-icon>
+          Tomar foto
         </ion-button>
-        <ion-loading trigger="regist-loading" duration="300"></ion-loading>
-        <br>
-      </form>
-    </ion-card-content>
-  </ion-card>
+    </ion-list>
+
+    <ion-button  (click)="registro()"> Registro</ion-button>
+
+  </div>
 </ion-content>
