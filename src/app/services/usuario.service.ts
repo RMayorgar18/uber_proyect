@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { last, lastValueFrom } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -10,7 +10,7 @@ export class UsuarioService {
 
   constructor(private http:HttpClient) { }
 
-  async agregarUsuario(datosUsuario:dataBodyUsuario, imgFileUser:any){
+  async agregarUsuario(datosUsuario:dataBodyUsuario, imgFileUser:any, ){
     try {
       const formData = new FormData();
 
@@ -23,7 +23,7 @@ export class UsuarioService {
   
       formData.append('image_usuario', imgFileUser.file, imgFileUser.name);
   
-      const response = await lastValueFrom(this.http.post<any>(environment.apiUrl + 'user/agregar',formData));
+      const response = await lastValueFrom(this.http.post<any>(environment.apiUrl + 'usuario/agregar',formData));
       return response;
       
     } catch (error) {
@@ -31,12 +31,46 @@ export class UsuarioService {
     }
 
   }
-asyc obtenerusuario(data:dataGetUser){
-  try{
-    const response = await lastValueFrom(this.http.get(environment.apiUrl + 'user/agregar'))
+
+
+  
+  async agregarViaje(data:bodyViaje ){
+    try {
+      const response = await lastValueFrom(this.http.post<any>(environment.apiUrl + 'viaje/agregar',data));
+      return response;
+      
+    } catch (error) {
+      throw error;
+    }
+
   }
+
+  
+
+
+  async obtenerUsuario(data:dataGetUser){
+    try {
+      const params = {
+        p_correo: data.p_correo,
+        token:data.token
+      }
+      const response = await lastValueFrom(this.http.get<any>(environment.apiUrl + 'user/obtener',{params}));
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
 }
 
+interface bodyViaje{
+  p_id_usuario:number;
+  p_ubicacion_origen:string;
+  p_ubicacion_destino:string;
+  p_costo:number;
+  p_id_vehiculo:number;
+  token:string;
 
 }
 
@@ -47,6 +81,7 @@ interface dataBodyUsuario{
   token?:string;
 }
 
-interface dataGetUser
-
+interface dataGetUser{
+  p_correo:string;
+  token:string;
 }

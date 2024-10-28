@@ -1,17 +1,10 @@
 //
-
 import { Component, OnInit } from '@angular/core';
-import {
-  FormGroup,
-  FormControl,
-  Validators,
-  FormBuilder
-} from '@angular/forms'
-import { Router } from '@angular/router';
-import { Camera, CameraResultType } from '@capacitor/camera';
-import { AlertController } from '@ionic/angular';
+import { FirebaseService } from 'src/app/services/firebase.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
-
+import { Camera, CameraResultType } from '@capacitor/camera';
+import { HelperService } from 'src/app/services/helper.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-registro',
@@ -20,95 +13,60 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 })
 export class RegistroPage implements OnInit {
 
-  formularioRegistro: FormGroup;
+  correo:string = "";
+  contrasena:string = "";
+  telefono:string = "";
+  nombre:string = "";
   imagen:any;
 
-  constructor(public fb: FormBuilder,public alertController: AlertController, private Router: Router, private userService: UsuarioService) { 
-    this.formularioRegistro = this.fb.group({
-      'nombre': new FormControl("",Validators.required),
-      'mail': new FormControl("",Validators.required),
-      'celular': new FormControl("",Validators.required),
-      'password': new FormControl("",Validators.required),
-      'confirmarPassword': new FormControl("",Validators.required)
-    });
-
-  }
+  constructor(private firebase:FirebaseService,
+              private usuarioService:UsuarioService,
+              private helper:HelperService,
+              private router:Router
+  ) { }
 
   ngOnInit() {
   }
 
   async registro(){
-    const userFirebase = await this.firebase.registro(this,correo,this.contraseña);
-  } 
+    const userFirebase = await this.firebase.registro (this.correo,this.contrasena);
+    const token = await  userFirebase.user?.getIdToken();
+    if(token){
+      const req = await this.usuarioService.agregarUsuario(
+        {
+          p_correo_electronico:this.correo,
+          p_nombre:this.nombre,
+          p_telefono:this.telefono,
+          token:token
+        },
+        this.imagen  
+      );
+    }
+    await this.helper.showAlert("Usuario agregado correctamente.", "Información");
+    await this.router.navigateByUrl('login');
+  }
 
-  async takePhoto(){
-    const image = await Camera.getPhoto({
-      quality: 90,
-      allowEditing: true,
-      resultType: CameraResultType.Uri 
-    });
-    if(image.webPath){
-      const response = await fetch(image.webPath);
-      const blob = await response.blob();
 
-      this.imagen = {
-        fname: 'foto' + image.format,
-        src:image.webPath,
-        File:blob
+
+ async takePhoto(){
+      const image = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: true,
+        resultType: CameraResultType.Uri
+      });
+      if(image.webPath){
+        const response = await fetch(image.webPath);
+        const blob = await response.blob();
+
+        this.imagen = {
+          fname: 'foto' + image.format,
+           src:image.webPath,
+           file: blob
+        }
       }
-    }
-    var imageUrl = image.webPath;
-    this.imagen.src = imageUrl;
+      var imageUrl = image.webPath;
+      this.imagen.src = imageUrl;
   }
 
-  async guardar() {
-    var f = this.formularioRegistro.value;
   
-    if (this.formularioRegistro.invalid) {
-      const alert = await this.alertController.create({
-        header: 'Error',
-        message: 'Por favor, rellena todos los campos.',
-        buttons: ['OK'],
-      });
-  
-      await alert.present();
-      return;
-    }
-  
-  
-    const password = f.password ? f.password.trim() : '';
-    const confirmarPassword = f.confirmarPassword ? f.confirmarPassword.trim() : '';
-  
-    if (password !== confirmarPassword) {
-      const alert = await this.alertController.create({
-        header: 'Error',
-        message: 'Las contraseñas no coinciden.',
-        buttons: ['OK'],
-      });
-  
-      await alert.present();
-      return;
-    }
-  
-    // Guarda el usuario en el localStorage
-    var usuario = {
-      nombre: f.nombre,
-      mail: f.mail,
-      celular: f.celular,
-      password: f.password
-    };
-    localStorage.setItem('usuario', JSON.stringify(usuario));
-  
-    const alert = await this.alertController.create({
-      header: 'Éxito',
-      message: 'Registro completado.',
-      buttons: ['OK'],
-    });
-  
-    await alert.present();
-  
-    this.Router.navigateByUrl('/login');
-  }
-  
-
 }

@@ -45,6 +45,10 @@ const routes: Routes = [
     path: 'rec-pass',
     loadChildren: () => import('./pages/rec-pass/rec-pass.module').then( m => m.RecPassPageModule)
   },
+  {
+    path: 'agregar-viaje',
+    loadChildren: () => import('./pages/agregar-viaje/agregar-viaje.module').then( m => m.AgregarViajePageModule)
+  },
 
 
 
